@@ -49,4 +49,37 @@ newman.speak();
 
 // Principle 4
 
-CordialPerson.call(this, greeting);
+function Human(object) {
+  this.name = object.name;
+  this.age = object.age;
+  this.gender = object.gender;
+  this.location = object.location;
+}
+
+Human.prototype.bioLine = function () {
+  return `${this.name} - ${this.age} / ${this.gender} / ${this.location}`;
+}
+
+function Nerd(object) {
+  Human.call(this, object); // explicit binding
+  this.superPowers = object.superPowers;
+  this.likes = object.likes;
+}
+
+Nerd.prototype = Object.create(Human.prototype);
+
+Nerd.prototype.detailLine = function () {
+  return `${this.name} has these powers: ${this.superPowers.join(', ')}.\nAnd likes: ${this.likes.join(', ')}`;
+}
+
+const ruby = new Nerd({
+  name: 'ruby',
+  age: 420,
+  gender: 'M',
+  location: '127.0.0.1',
+  superPowers: ['bash', 'vscode'],
+  likes: ['entertainment', 'programming', 'reading']
+});
+
+console.log(ruby.bioLine());
+console.log(ruby.detailLine());
