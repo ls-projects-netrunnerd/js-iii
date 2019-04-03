@@ -125,18 +125,88 @@ Humanoid.prototype.greet = function() {
     language: 'Elvish',
   });
 
-  console.log(mage.createdAt); // Today's date
-  console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
-  console.log(swordsman.healthPoints); // 15
-  console.log(mage.name); // Bruce
-  console.log(swordsman.team); // The Round Table
-  console.log(mage.weapons); // Staff of Shamalama
-  console.log(archer.language); // Elvish
-  console.log(archer.greet()); // Lilith offers a greeting in Elvish.
-  console.log(mage.takeDamage()); // Bruce took damage.
-  console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+  // console.log(mage.createdAt); // Today's date
+  // console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
+  // console.log(swordsman.healthPoints); // 15
+  // console.log(mage.name); // Bruce
+  // console.log(swordsman.team); // The Round Table
+  // console.log(mage.weapons); // Staff of Shamalama
+  // console.log(archer.language); // Elvish
+  // console.log(archer.greet()); // Lilith offers a greeting in Elvish.
+  // console.log(mage.takeDamage()); // Bruce took damage.
+  // console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+  function Fighter(o) {
+    Humanoid.call(this, o);
+    this.hitPoints = o.hitPoints;
+  }
+
+  Fighter.prototype = Object.create(Humanoid.prototype);
+
+  Fighter.prototype.fight = function (t) {
+    const msg = `${this.name} hit ${t.name} for ${this.hitPoints} health points.`;
+
+    t.healthPoints -= this.hitPoints;
+
+    if (this.healthPoints <= 0) {
+      return `${this.name} is too dead to fight.`;
+    }
+
+    if (t.healthPoints <= 0) {
+      return `${msg}\n${t.destroy()}`;
+    }
+
+    return msg;
+  }
+  
+  const hero = new Fighter({
+    createdAt: new Date(),
+    dimensions: {
+      length: 5,
+      width: 3,
+      height: 5,
+    },
+    healthPoints: 300,
+    name: 'Constantine',
+    team: 'Satan',
+    weapons: [
+      'Shotgun',
+      'Combat knife',
+    ],
+    language: 'Devilish',
+    hitPoints: 50
+  });
+
+  const villain = new Fighter({
+    createdAt: new Date(),
+    dimensions: {
+      length: 10,
+      width: 30,
+      height: 40,
+    },
+    healthPoints: 500,
+    name: 'Aeb',
+    team: 'Satan',
+    weapons: [
+      'Claws',
+      'Teeth',
+    ],
+    language: 'Devilish',
+    hitPoints: 100
+  });
+
+  console.log(hero.fight(villain));
+  console.log(villain.fight(hero));
+  
+  while (villain.healthPoints > 0) {
+    if (villain.healthPoints == 300) {
+      console.log(villain.fight(hero));
+    }
+    console.log(hero.fight(villain));
+  }
+  
